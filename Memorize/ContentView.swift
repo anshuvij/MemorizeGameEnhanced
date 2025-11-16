@@ -7,13 +7,15 @@
 
 import SwiftUI
 
+// contentView behaves like a view
 struct ContentView: View {
+    let emojis = ["👻", "🎃", "🕷️", "😈", "😈"]
+    
     var body: some View {
         HStack {
-            CardView(isFaceUp: true)
-            CardView()
-            CardView()
-            CardView()
+            ForEach(emojis.indices, id: \.self) { index in
+                CardView(content: emojis[index])
+            }
         }
         .foregroundStyle(.orange)
         .padding()
@@ -21,22 +23,24 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-    var isFaceUp : Bool = false // default value
+    let content: String
+    @State var isFaceUp : Bool = true // @State keeps a pointer to isFaceUp thats why since pointer cant change but the isFaceUp can change
     
     var body: some View {
         ZStack {
+            let base = RoundedRectangle(cornerRadius: 12)  // Type Inference
             if isFaceUp {
-                RoundedRectangle(cornerRadius: 12)
-                    .foregroundStyle(.white)
-                RoundedRectangle(cornerRadius: 12)
-                    .strokeBorder(lineWidth: 2)
-                Text("👻")
+               base.foregroundStyle(.white)
+                base.strokeBorder(lineWidth: 2)
+                Text(content)
                     .font(.largeTitle)
             }
             else {
-                RoundedRectangle(cornerRadius: 12)
+                base
             }
-                
+        }
+        .onTapGesture {
+            isFaceUp.toggle()
         }
     }
 }
