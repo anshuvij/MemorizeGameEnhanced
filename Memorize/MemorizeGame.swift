@@ -11,9 +11,11 @@ struct MemorizeGame<ContentType> where ContentType : Equatable {
 
     var cards: [Card]
     let numberOfPair: Int
+    var score: Int = 0
     
     init(numberOfPair: Int, contentType : (Int) -> ContentType) {
         cards = []
+        score = 0
         self.numberOfPair = numberOfPair
         
         for index in 0..<max(2,numberOfPair) {
@@ -25,12 +27,9 @@ struct MemorizeGame<ContentType> where ContentType : Equatable {
     }
     
     var indexOfOneAndOnlyFaceUpCard: Int? {
-        get {
-            cards.indices.filter { index in cards[index].isFaceUp}.only
-        }
+        get { cards.indices.filter { index in cards[index].isFaceUp}.only }
         
-        set {cards.indices.forEach { cards[$0].isFaceUp = (newValue == $0)}
-        }
+        set { cards.indices.forEach { cards[$0].isFaceUp = (newValue == $0) } }
     }
     
     func cards(at index: Int) -> Card {
@@ -49,6 +48,17 @@ struct MemorizeGame<ContentType> where ContentType : Equatable {
                     if cards[potentialMatchIndex].content == cards[chosenIndex].content {
                         cards[potentialMatchIndex].isMatched = true
                         cards[chosenIndex].isMatched = true
+                        score += 2
+                    }
+                    else {
+                        if cards[potentialMatchIndex].isSeen {
+                            score -= 1
+                        }
+                        if cards[chosenIndex].isSeen {
+                            score -= 1
+                        }
+                        cards[potentialMatchIndex].isSeen = true
+                        cards[chosenIndex].isSeen = true
                     }
                 } else {
                     indexOfOneAndOnlyFaceUpCard = chosenIndex
@@ -59,10 +69,15 @@ struct MemorizeGame<ContentType> where ContentType : Equatable {
         }
     }
     
+    func getScore() -> Int {
+        return score
+    }
+    
     struct Card: Equatable, Identifiable {
         var id: String
         var isFaceUp: Bool = false
         var isMatched: Bool = false
+        var isSeen: Bool = false
         var content: ContentType
     }
 }

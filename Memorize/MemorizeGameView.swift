@@ -14,7 +14,7 @@ struct MemorizeGameView: View {
     
     var body: some View {
         VStack {
-            Text("Memorize!")
+            Text("Memorize - \(memorizeEmojiViewModel.themeName)")
                 .font(.largeTitle)
                 .bold()
             
@@ -23,11 +23,30 @@ struct MemorizeGameView: View {
                     .animation(.default, value: memorizeEmojiViewModel.cards)
             }
             
-            Button {
-                memorizeEmojiViewModel.shuffle()
-            } label: {
-                Text("Shuffle")
+            HStack {
+                Button {
+                    memorizeEmojiViewModel.reset()
+                } label: {
+                    Text("New Game")
+                    
+                }
+                
+                Spacer()
+                
+                Text("Score: \(memorizeEmojiViewModel.score)")
+                    .font(.title)
+                    .bold()
+                
+                Spacer()
+                
+                Button {
+                    memorizeEmojiViewModel.shuffle()
+                } label: {
+                    Text("Shuffle")
+                }
+                
             }
+            .padding()
 
         }
         .padding() // doesn't pass down to internal views
@@ -49,7 +68,7 @@ struct MemorizeGameView: View {
             }
             
         }
-        .foregroundStyle(.orange)
+        .foregroundStyle(memorizeEmojiViewModel.themeColor)
     }
 }
 
