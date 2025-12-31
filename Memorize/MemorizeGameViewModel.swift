@@ -38,7 +38,8 @@ class MemorizeGameViewModel: ObservableObject {
     @Published private(set) var selectedTheme: Theme
     
     init() {
-        let theme = Self.themes[0]
+        let randomInt = Int.random(in: 0..<Self.themes.count)
+        let theme = Self.themes[randomInt]
         selectedTheme = theme
         game = Self.createMemoryGame(theme: theme)
         
